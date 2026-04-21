@@ -10,7 +10,7 @@ const themes = {
 
 export type ThemeKey = keyof typeof themes
 
-export default function NoiseGradient({
+export default function SilkWave({
     speed = 0.008,
     noiseOpacity = 0.02,
     theme = "gold" as ThemeKey,
@@ -122,7 +122,7 @@ export default function NoiseGradient({
     )
 }
 
-addPropertyControls(NoiseGradient, {
+addPropertyControls(SilkWave, {
     theme: {
         type: ControlType.Enum,
         title: "Theme",

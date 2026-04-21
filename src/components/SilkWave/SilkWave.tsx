@@ -33,10 +33,16 @@ const themes = {
 
 export type ThemeKey = keyof typeof themes
 
-export default function NoiseGradient({
+export default function SilkWave({
     speed = 0.008,
     noiseOpacity = 0.02,
     theme = "gold" as ThemeKey,
+    fill = false,
+}: {
+    speed?: number
+    noiseOpacity?: number
+    theme?: ThemeKey
+    fill?: boolean
 }) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -52,8 +58,13 @@ export default function NoiseGradient({
         const t_ = themes[theme]
 
         const resize = () => {
-            canvas.width = window.innerWidth
-            canvas.height = window.innerHeight
+            if (fill) {
+                canvas.width = canvas.offsetWidth
+                canvas.height = canvas.offsetHeight
+            } else {
+                canvas.width = window.innerWidth
+                canvas.height = window.innerHeight
+            }
         }
 
         resize()
@@ -140,18 +151,28 @@ export default function NoiseGradient({
             cancelAnimationFrame(animationId)
             window.removeEventListener("resize", resize)
         }
-    }, [speed, noiseOpacity, theme])
+    }, [speed, noiseOpacity, theme, fill])
 
     return (
         <canvas
             ref={canvasRef}
-            style={{
-                position: "fixed",
-                top: 0,
-                left: 0,
-                width: "100vw",
-                height: "100vh",
-            }}
+            style={
+                fill
+                    ? {
+                          position: "absolute",
+                          inset: 0,
+                          width: "100%",
+                          height: "100%",
+                      }
+                    : {
+                          position: "fixed",
+                          top: 0,
+                          left: 0,
+                          width: "100vw",
+                          height: "100vh",
+                          maxWidth: "100vw",
+                      }
+            }
         />
     )
 }
