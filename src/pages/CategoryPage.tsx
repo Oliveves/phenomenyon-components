@@ -85,7 +85,7 @@ export default function CategoryPage() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontFamily: "'Cormorant Garamond', serif",
+        fontFamily: "'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif",
         letterSpacing: "0.2em",
         textTransform: "uppercase",
         fontSize: "0.9rem",
@@ -131,7 +131,7 @@ export default function CategoryPage() {
             cursor: "pointer",
             fontSize: "1.5rem",
             padding: 8,
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif",
           }}
         >
           ←
@@ -235,7 +235,7 @@ function CategoryCard({
         zIndex: 1,
       }}>
         <span style={{
-          fontFamily: "'Cormorant Garamond', serif",
+          fontFamily: "'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif",
           fontSize: "0.7rem",
           letterSpacing: "0.4em",
           color: COLORS.silver,
@@ -265,7 +265,7 @@ function CategoryCard({
                 {item.name}
               </h2>
               <p style={{
-                fontFamily: "'Cormorant Garamond', serif",
+                fontFamily: "'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif",
                 fontSize: "0.85rem",
                 letterSpacing: "0.2em",
                 textTransform: "uppercase",
@@ -277,7 +277,7 @@ function CategoryCard({
             </>
           ) : (
             <span style={{
-              fontFamily: "'Cormorant Garamond', serif",
+              fontFamily: "'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif",
               fontSize: "0.8rem",
               letterSpacing: "0.4em",
               textTransform: "uppercase",
@@ -290,7 +290,7 @@ function CategoryCard({
 
         <div style={{
           alignSelf: "flex-end",
-          fontFamily: "'Cormorant Garamond', serif",
+          fontFamily: "'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif",
           fontSize: "0.75rem",
           letterSpacing: "0.3em",
           textTransform: "uppercase",

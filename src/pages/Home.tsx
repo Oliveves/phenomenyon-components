@@ -1,6 +1,16 @@
 import { useEffect, useMemo, useState } from "react"
 import { Link } from "react-router-dom"
 import { categories, type ComponentItem } from "../data/categories"
+import SilkWave, { type ThemeKey } from "../components/SilkWave"
+
+const THEME_DOT: Record<ThemeKey, string> = {
+  gold: "#B4913C",
+  silver: "#96AAB9",
+  rose: "#BE8282",
+  navy: "#5082C8",
+}
+
+const THEME_ORDER: ThemeKey[] = ["gold", "silver", "rose", "navy"]
 
 const COLORS = {
   bg: "#080808",
@@ -69,7 +79,7 @@ export default function Home() {
             textAlign: "center",
             marginTop: "40vh",
             color: COLORS.silver,
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif",
             letterSpacing: "0.2em",
             textTransform: "uppercase",
             fontSize: "0.85rem",
@@ -166,7 +176,7 @@ function Header({
             borderRadius: 999,
             padding: "10px 20px",
             color: COLORS.text,
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif",
             fontSize: "0.9rem",
             letterSpacing: "0.05em",
             outline: "none",
@@ -184,7 +194,7 @@ function Header({
             borderRadius: 8,
             padding: "8px 14px",
             color: COLORS.silver,
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif",
             fontSize: "0.85rem",
             letterSpacing: "0.15em",
             textTransform: "uppercase",
@@ -232,7 +242,7 @@ function CategoryRow({
           style={{
             color: COLORS.silver,
             textDecoration: "none",
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif",
             fontSize: "0.75rem",
             letterSpacing: "0.3em",
             textTransform: "uppercase",
@@ -261,46 +271,112 @@ function CategoryRow({
 }
 
 function Card({ item }: { item: ComponentItem }) {
+  const isLive = item.status === "live"
+  const [hovered, setHovered] = useState(false)
+  const [hoveredDot, setHoveredDot] = useState<ThemeKey | null>(null)
+  const theme: ThemeKey = hoveredDot ?? "gold"
+
   const body = (
-    <div style={{
-      width: 320,
-      height: 240,
-      flexShrink: 0,
-      borderRadius: 12,
-      background: COLORS.card,
-      padding: 24,
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "space-between",
-      border: `1px solid ${COLORS.border}`,
-      cursor: item.status === "live" ? "pointer" : "default",
-      opacity: item.status === "live" ? 1 : 0.5,
-      transition: "border-color 0.2s, transform 0.2s",
-    }}>
-      <h3 style={{
-        fontFamily: "'Imbue', serif",
-        fontStyle: "italic",
-        fontWeight: 300,
-        fontSize: "1.5rem",
-        color: COLORS.text,
-        margin: 0,
+    <div
+      onMouseEnter={() => isLive && setHovered(true)}
+      onMouseLeave={() => {
+        setHovered(false)
+        setHoveredDot(null)
+      }}
+      style={{
+        width: 320,
+        height: 240,
+        flexShrink: 0,
+        borderRadius: 12,
+        background: COLORS.card,
+        border: `1px solid ${COLORS.border}`,
+        position: "relative",
+        overflow: "hidden",
+        cursor: isLive ? "pointer" : "default",
+        opacity: isLive ? 1 : 0.5,
+        transition: "border-color 0.2s",
+      }}
+    >
+      {isLive && hovered && (
+        <>
+          <SilkWave fill theme={theme} speed={0.008} noiseOpacity={0.02} />
+          <div style={{
+            position: "absolute",
+            inset: 0,
+            background: "rgba(0,0,0,0.35)",
+            pointerEvents: "none",
+          }} />
+        </>
+      )}
+
+      <div style={{
+        position: "relative",
+        zIndex: 1,
+        padding: 24,
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
       }}>
-        {item.name}
-      </h3>
-      <p style={{
-        fontFamily: "'Cormorant Garamond', serif",
-        fontSize: "0.85rem",
-        lineHeight: 1.5,
-        letterSpacing: "0.03em",
-        color: COLORS.soonText,
-        margin: 0,
-      }}>
-        {item.desc}
-      </p>
+        <h3 style={{
+          fontFamily: "'Imbue', serif",
+          fontStyle: "italic",
+          fontWeight: 300,
+          fontSize: "1.5rem",
+          color: COLORS.text,
+          margin: 0,
+        }}>
+          {item.name}
+        </h3>
+        <div style={{
+          display: "flex",
+          alignItems: "flex-end",
+          justifyContent: "space-between",
+          gap: 12,
+        }}>
+          <p style={{
+            flex: 1,
+            fontFamily: "'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif",
+            fontSize: "0.85rem",
+            lineHeight: 1.5,
+            letterSpacing: "0.03em",
+            color: hovered ? COLORS.text : COLORS.soonText,
+            margin: 0,
+            transition: "color 0.2s",
+          }}>
+            {item.desc}
+          </p>
+          {isLive && (
+            <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+              {THEME_ORDER.map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  aria-label={`${t} theme`}
+                  onMouseEnter={() => setHoveredDot(t)}
+                  onMouseLeave={() => setHoveredDot(null)}
+                  onClick={(e) => e.preventDefault()}
+                  style={{
+                    width: 12,
+                    height: 12,
+                    borderRadius: "50%",
+                    border: `1px solid ${hoveredDot === t ? COLORS.text : "rgba(255,255,255,0.15)"}`,
+                    padding: 0,
+                    background: THEME_DOT[t],
+                    cursor: "pointer",
+                    transition: "border-color 0.15s, transform 0.15s",
+                    transform: hoveredDot === t ? "scale(1.2)" : "scale(1)",
+                  }}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   )
 
-  if (item.status === "live") {
+  if (isLive) {
     return (
       <Link to={`/components/${item.slug}`} style={{ textDecoration: "none" }}>
         {body}

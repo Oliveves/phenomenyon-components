@@ -29,7 +29,7 @@ export default function SilkWavePage() {
       }}>
         <div style={{
           textAlign: "center",
-          fontFamily: "'Cormorant Garamond', serif",
+          fontFamily: "'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif",
         }}>
           <h1 style={{
             fontSize: "clamp(2rem, 5vw, 6rem)",
@@ -75,7 +75,7 @@ export default function SilkWavePage() {
           letterSpacing: "0.4em",
           textTransform: "uppercase",
           marginBottom: "24px",
-          fontFamily: "'Cormorant Garamond', serif",
+          fontFamily: "'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif",
         }}>
           Components
         </p>
@@ -129,7 +129,7 @@ export default function SilkWavePage() {
                 fontSize: "0.85rem",
                 lineHeight: 1.7,
                 margin: 0,
-                fontFamily: "'Cormorant Garamond', serif",
+                fontFamily: "'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif",
                 letterSpacing: "0.02em",
               }}>
                 {item.desc}
@@ -159,7 +159,7 @@ export default function SilkWavePage() {
           letterSpacing: "0.4em",
           textTransform: "uppercase",
           marginBottom: "24px",
-          fontFamily: "'Cormorant Garamond', serif",
+          fontFamily: "'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif",
         }}>
           Themes
         </p>
@@ -220,7 +220,7 @@ export default function SilkWavePage() {
                   {item.label}
                 </p>
                 <p style={{
-                  fontFamily: "'Cormorant Garamond', serif",
+                  fontFamily: "'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif",
                   fontSize: "0.7rem",
                   letterSpacing: "0.3em",
                   textTransform: "uppercase",
@@ -255,7 +255,7 @@ export default function SilkWavePage() {
           letterSpacing: "0.4em",
           textTransform: "uppercase",
           marginBottom: "24px",
-          fontFamily: "'Cormorant Garamond', serif",
+          fontFamily: "'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif",
         }}>
           Available on
         </p>
@@ -280,7 +280,7 @@ export default function SilkWavePage() {
             padding: "16px 48px",
             border: "1px solid #F0EDE8",
             color: "#F0EDE8",
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif",
             fontSize: "0.85rem",
             letterSpacing: "0.3em",
             textTransform: "uppercase",
@@ -304,7 +304,7 @@ export default function SilkWavePage() {
           fontSize: "0.75rem",
           letterSpacing: "0.2em",
           marginTop: "80px",
-          fontFamily: "'Cormorant Garamond', serif",
+          fontFamily: "'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif",
         }}>
           © Phenomenyon stu. 2026
         </p>
