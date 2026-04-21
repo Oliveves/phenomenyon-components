@@ -7,7 +7,7 @@ const themeTextColors: Record<ThemeKey, { title: string; sub: string }> = {
   navy: { title: "#F0F4FF", sub: "#8AA0C0" },
 }
 
-const currentTheme: ThemeKey = "rose" // 여기서 테마 바꾸기
+const currentTheme: ThemeKey = "gold" // 여기서 테마 바꾸기
 
 export default function SilkWavePage() {
   const colors = themeTextColors[currentTheme]
@@ -272,7 +272,7 @@ export default function SilkWavePage() {
         </h2>
 
         <a
-          href="https://www.framer.com/marketplace/"
+          href="https://www.framer.com/marketplace/components/?q=silkwave"
           target="_blank"
           rel="noopener noreferrer"
           style={{

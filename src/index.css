@@ -10,6 +10,14 @@ body {
   overflow-x: hidden;
 }
 
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 :root {
   --text: #6b6375;
   --text-h: #08060d;

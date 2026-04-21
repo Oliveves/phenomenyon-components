@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Home from "./pages/Home"
+import CategoryPage from "./pages/CategoryPage"
 import SilkWavePage from "./pages/components/SilkWave"
 
 export default function App() {
@@ -7,6 +8,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/category/:slug" element={<CategoryPage />} />
         <Route path="/components/silk-wave" element={<SilkWavePage />} />
       </Routes>
     </BrowserRouter>
