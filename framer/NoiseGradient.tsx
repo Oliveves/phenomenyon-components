@@ -1,34 +1,11 @@
 import { useEffect, useRef } from "react"
+import { addPropertyControls, ControlType } from "framer"
 
 const themes = {
-    gold: {
-        bg1: "#FFFFFF",
-        bg2: "#F5F0E8",
-        bg3: "#EDE4D0",
-        lineColor: "180, 145, 60",
-        glowColor: "255, 240, 180",
-    },
-    silver: {
-        bg1: "#FFFFFF",
-        bg2: "#F2F4F6",
-        bg3: "#E2E8ED",
-        lineColor: "150, 170, 185",
-        glowColor: "220, 235, 245",
-    },
-    rose: {
-        bg1: "#FFFFFF",
-        bg2: "#F9F0F0",
-        bg3: "#EED8D8",
-        lineColor: "190, 130, 130",
-        glowColor: "255, 210, 200",
-    },
-    navy: {
-        bg1: "#0A0F1E",
-        bg2: "#0D1528",
-        bg3: "#111D35",
-        lineColor: "80, 130, 200",
-        glowColor: "100, 160, 255",
-    },
+    gold:   { bg1: "#FFFFFF", bg2: "#F5F0E8", bg3: "#EDE4D0", lineColor: "180, 145, 60",  glowColor: "255, 240, 180" },
+    silver: { bg1: "#FFFFFF", bg2: "#F2F4F6", bg3: "#E2E8ED", lineColor: "150, 170, 185", glowColor: "220, 235, 245" },
+    rose:   { bg1: "#FFFFFF", bg2: "#F9F0F0", bg3: "#EED8D8", lineColor: "190, 130, 130", glowColor: "255, 210, 200" },
+    navy:   { bg1: "#0A0F1E", bg2: "#0D1528", bg3: "#111D35", lineColor: "80, 130, 200",  glowColor: "100, 160, 255" },
 }
 
 export type ThemeKey = keyof typeof themes
@@ -48,15 +25,12 @@ export default function NoiseGradient({
 
         let animationId: number
         let t = 0
-
         const t_ = themes[theme]
 
         const resize = () => {
-            canvas.width = window.innerWidth
-            canvas.height = window.innerHeight
+            canvas.width = canvas.offsetWidth
+            canvas.height = canvas.offsetHeight
         }
-
-        resize()
 
         const drawBackground = () => {
             const w = canvas.width
@@ -72,14 +46,12 @@ export default function NoiseGradient({
         const drawWaveLines = () => {
             const w = canvas.width
             const h = canvas.height
-            const lineCount = 60
 
-            for (let i = 0; i < lineCount; i++) {
-                const progress = i / lineCount
+            for (let i = 0; i < 60; i++) {
+                const progress = i / 60
                 const yBase = h * (0.4 + progress * 0.5)
 
                 ctx.beginPath()
-
                 for (let x = 0; x <= w; x += 2) {
                     const wave1 = Math.sin(x * 0.003 + t + progress * 2) * h * 0.18
                     const wave2 = Math.sin(x * 0.006 - t * 1.3 + progress) * h * 0.08
@@ -97,8 +69,7 @@ export default function NoiseGradient({
                 }
 
                 ctx.lineWidth = 0.5
-                const alpha = 0.05 + glowIntensity * 0.3
-                ctx.strokeStyle = `rgba(${t_.lineColor}, ${alpha})`
+                ctx.strokeStyle = `rgba(${t_.lineColor}, ${0.05 + glowIntensity * 0.3})`
                 ctx.stroke()
             }
         }
@@ -133,6 +104,7 @@ export default function NoiseGradient({
             animationId = requestAnimationFrame(animate)
         }
 
+        resize()
         animate()
 
         window.addEventListener("resize", resize)
@@ -145,13 +117,33 @@ export default function NoiseGradient({
     return (
         <canvas
             ref={canvasRef}
-            style={{
-                position: "fixed",
-                top: 0,
-                left: 0,
-                width: "100vw",
-                height: "100vh",
-            }}
+            style={{ width: "100%", height: "100%" }}
         />
     )
 }
+
+addPropertyControls(NoiseGradient, {
+    theme: {
+        type: ControlType.Enum,
+        title: "Theme",
+        options: ["gold", "silver", "rose", "navy"],
+        optionTitles: ["Gold", "Silver", "Rose", "Navy"],
+        defaultValue: "gold",
+    },
+    speed: {
+        type: ControlType.Number,
+        title: "Speed",
+        defaultValue: 0.008,
+        min: 0.001,
+        max: 0.05,
+        step: 0.001,
+    },
+    noiseOpacity: {
+        type: ControlType.Number,
+        title: "Grain",
+        defaultValue: 0.02,
+        min: 0,
+        max: 0.1,
+        step: 0.005,
+    },
+})

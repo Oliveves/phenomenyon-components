@@ -1,6 +1,17 @@
-import NoiseGradient from "./components/NoiseGradient"
+import NoiseGradient, { type ThemeKey } from "./components/NoiseGradient"
+
+const themeTextColors: Record<ThemeKey, { title: string; sub: string }> = {
+  gold: { title: "#2A1F0E", sub: "#6B5A3E" },
+  silver: { title: "#1A2330", sub: "#4A5A6A" },
+  rose: { title: "#2A1010", sub: "#7A4A4A" },
+  navy: { title: "#F0F4FF", sub: "#8AA0C0" },
+}
+
+const currentTheme: ThemeKey = "rose" // 여기서 테마 바꾸기
 
 export default function App() {
+  const colors = themeTextColors[currentTheme]
+
   return (
     <div style={{
       position: "fixed",
@@ -13,12 +24,11 @@ export default function App() {
       alignItems: "center",
       justifyContent: "center",
     }}>
-      <NoiseGradient speed={0.008} noiseOpacity={0.02} />
+      <NoiseGradient speed={0.008} noiseOpacity={0.02} theme={currentTheme} />
       <div style={{
         position: "relative",
         zIndex: 1,
         textAlign: "center",
-        color: "#2A1F0E",
         fontFamily: "'Cormorant Garamond', serif",
       }}>
         <h1 style={{
@@ -28,6 +38,7 @@ export default function App() {
           fontStyle: "italic",
           letterSpacing: "0.05em",
           fontFamily: "'Imbue', serif",
+          color: colors.title,
         }}>
           Phenomenyon stu.
         </h1>
@@ -36,7 +47,7 @@ export default function App() {
           letterSpacing: "0.4em",
           marginTop: "1.5rem",
           fontWeight: 300,
-          color: "#6B5A3E",
+          color: colors.sub,
           textTransform: "uppercase",
         }}>
           Curated interactions for brands that demand more.
