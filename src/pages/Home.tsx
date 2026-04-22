@@ -3,6 +3,21 @@ import { Link } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import SilkWave from "../components/SilkWave"
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(max-width: 767px)").matches
+  )
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)")
+    const onChange = (e: MediaQueryListEvent) => setIsMobile(e.matches)
+    mq.addEventListener("change", onChange)
+    return () => mq.removeEventListener("change", onChange)
+  }, [])
+  return isMobile
+}
+
 const FONT_SANS =
   "'Geist', 'Pretendard Variable', Pretendard, 'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, sans-serif"
 const FONT_SERIF = "'Imbue', serif"
@@ -100,6 +115,8 @@ export default function Home() {
     }
   }, [splash])
 
+  const isMobile = useIsMobile()
+
   const [query, setQuery] = useState("")
   const [activeCategory, setActiveCategory] = useState<string>("backgrounds")
   const isSearching = query.trim().length > 0
@@ -123,9 +140,10 @@ export default function Home() {
     return categories[activeCategory].items
   }, [isSearching, query, activeCategory])
 
-  // Wheel → horizontal scroll
+  // Wheel → horizontal scroll (desktop only)
   const scrollerRef = useRef<HTMLDivElement | null>(null)
   useEffect(() => {
+    if (isMobile) return
     const el = scrollerRef.current
     if (!el) return
     const onWheel = (e: WheelEvent) => {
@@ -136,7 +154,7 @@ export default function Home() {
     }
     el.addEventListener("wheel", onWheel, { passive: false })
     return () => el.removeEventListener("wheel", onWheel)
-  }, [])
+  }, [isMobile])
 
   return (
     <div style={{
@@ -149,26 +167,35 @@ export default function Home() {
     }}>
       {splash && <Splash fading={fading} />}
 
-      <Header />
+      <Header isMobile={isMobile} />
 
       <main style={{
         display: "flex",
+        flexDirection: isMobile ? "column" : "row",
         height: `calc(100vh - ${HEADER_H}px)`,
         marginTop: HEADER_H,
-        paddingBottom: 60,
+        paddingBottom: isMobile ? 72 : 60,
         boxSizing: "border-box",
       }}>
         <aside style={{
-          width: "28%",
-          minWidth: 240,
-          borderRight: `1px solid ${COLORS.border}`,
-          padding: "0 40px",
+          width: isMobile ? "100%" : "28%",
+          minWidth: isMobile ? 0 : 240,
+          flexShrink: 0,
+          borderRight: isMobile ? "none" : `1px solid ${COLORS.border}`,
+          borderBottom: isMobile ? `1px solid ${COLORS.border}` : "none",
+          padding: isMobile ? "18px 20px" : "0 40px",
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          gap: 16,
-          overflow: "hidden",
-        }}>
+          flexDirection: isMobile ? "row" : "column",
+          justifyContent: isMobile ? "flex-start" : "center",
+          alignItems: isMobile ? "center" : "stretch",
+          gap: isMobile ? 20 : 16,
+          overflowX: isMobile ? "auto" : "hidden",
+          overflowY: "hidden",
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+        }}
+        className={isMobile ? "no-scrollbar" : undefined}
+        >
           {CATEGORY_KEYS.map((k) => {
             const isActive = !isSearching && activeCategory === k
             return (
@@ -188,10 +215,14 @@ export default function Home() {
                   fontFamily: FONT_SERIF,
                   fontStyle: "italic",
                   fontWeight: 300,
-                  fontSize: "clamp(2.5rem, 4vw, 5rem)",
+                  fontSize: isMobile
+                    ? "1.6rem"
+                    : "clamp(2.5rem, 4vw, 5rem)",
                   lineHeight: 1.1,
                   color: isActive ? COLORS.text : COLORS.catInactive,
                   transition: "color 0.25s",
+                  whiteSpace: "nowrap",
+                  flexShrink: 0,
                 }}
               >
                 {categories[k].label}
@@ -205,7 +236,9 @@ export default function Home() {
           className="no-scrollbar"
           style={{
             flex: 1,
-            height: "100%",
+            minHeight: 0,
+            height: isMobile ? "auto" : "100%",
+            width: isMobile ? "100%" : "auto",
             overflowX: "auto",
             overflowY: "hidden",
             display: "flex",
@@ -228,8 +261,8 @@ export default function Home() {
                 }}
                 style={{
                   display: "flex",
-                  gap: 24,
-                  padding: "0 40px",
+                  gap: isMobile ? 16 : 24,
+                  padding: isMobile ? "0 20px" : "0 40px",
                   alignItems: "center",
                 }}
               >
@@ -247,7 +280,7 @@ export default function Home() {
                     }}
                     style={{ flexShrink: 0 }}
                   >
-                    <Card item={it} />
+                    <Card item={it} isMobile={isMobile} />
                   </motion.div>
                 ))}
               </motion.div>
@@ -256,7 +289,7 @@ export default function Home() {
         </section>
       </main>
 
-      <SearchBar query={query} onChange={setQuery} />
+      <SearchBar query={query} onChange={setQuery} isMobile={isMobile} />
     </div>
   )
 }
@@ -290,7 +323,7 @@ function Splash({ fading }: { fading: boolean }) {
   )
 }
 
-function Header() {
+function Header({ isMobile }: { isMobile: boolean }) {
   return (
     <header
       style={{
@@ -302,7 +335,7 @@ function Header() {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: "0 32px",
+        padding: isMobile ? "0 18px" : "0 32px",
         background: COLORS.bg,
         borderBottom: `1px solid ${COLORS.border}`,
         zIndex: 100,
@@ -312,11 +345,11 @@ function Header() {
         <img
           src="/logo.svg"
           alt="Phenomenyon stu."
-          style={{ height: 32, width: "auto", filter: "invert(1)" }}
+          style={{ height: isMobile ? 26 : 32, width: "auto", filter: "invert(1)" }}
         />
       </Link>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 28, color: COLORS.silver }}>
+      <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 20 : 28, color: COLORS.silver }}>
         <a
           href="https://www.framer.com/marketplace/"
           target="_blank"
@@ -385,18 +418,22 @@ function Header() {
 function SearchBar({
   query,
   onChange,
+  isMobile,
 }: {
   query: string
   onChange: (v: string) => void
+  isMobile: boolean
 }) {
   return (
     <div
       style={{
         position: "fixed",
-        left: 40,
-        bottom: 32,
+        left: isMobile ? 20 : 40,
+        right: isMobile ? 20 : "auto",
+        bottom: isMobile ? 20 : 32,
         zIndex: 50,
-        width: 240,
+        width: isMobile ? "auto" : 240,
+        background: COLORS.bg,
         display: "flex",
         alignItems: "center",
         gap: 10,
@@ -469,18 +506,18 @@ const THEME_DOT: Record<(typeof THEMES)[number], string> = {
   navy: "#5082C8",
 }
 
-function Card({ item }: { item: Item }) {
+function Card({ item, isMobile }: { item: Item; isMobile: boolean }) {
   const isSilkWave = item.id === "silk-wave"
   const [activeTheme, setActiveTheme] = useState<(typeof THEMES)[number]>("gold")
 
   return (
     <article
       style={{
-        width: 540,
+        width: isMobile ? "min(86vw, 420px)" : 540,
         flexShrink: 0,
         display: "flex",
         flexDirection: "column",
-        gap: 16,
+        gap: isMobile ? 12 : 16,
       }}
     >
       <div

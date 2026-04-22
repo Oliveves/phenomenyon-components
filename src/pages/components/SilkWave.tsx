@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react"
 import SilkWave, { type ThemeKey } from "../../components/SilkWave"
 
 const themeTextColors: Record<ThemeKey, { title: string; sub: string }> = {
@@ -9,8 +10,25 @@ const themeTextColors: Record<ThemeKey, { title: string; sub: string }> = {
 
 const currentTheme: ThemeKey = "gold" // 여기서 테마 바꾸기
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(max-width: 767px)").matches
+  )
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)")
+    const onChange = (e: MediaQueryListEvent) => setIsMobile(e.matches)
+    mq.addEventListener("change", onChange)
+    return () => mq.removeEventListener("change", onChange)
+  }, [])
+  return isMobile
+}
+
 export default function SilkWavePage() {
   const colors = themeTextColors[currentTheme]
+  const isMobile = useIsMobile()
+  const sectionPadding = isMobile ? "80px 24px" : "120px 60px"
 
   return (
     <div style={{ overflowX: "hidden" }}>
@@ -66,7 +84,7 @@ export default function SilkWavePage() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "120px 60px",
+        padding: sectionPadding,
         boxSizing: "border-box",
       }}>
         <p style={{
@@ -85,7 +103,7 @@ export default function SilkWavePage() {
           fontWeight: 300,
           fontStyle: "italic",
           fontFamily: "'Imbue', serif",
-          margin: "0 0 80px 0",
+          margin: isMobile ? "0 0 48px 0" : "0 0 80px 0",
           textAlign: "center",
         }}>
           Built for luxury brands.
@@ -93,8 +111,10 @@ export default function SilkWavePage() {
 
         <div style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-          gap: "24px",
+          gridTemplateColumns: isMobile
+            ? "1fr"
+            : "repeat(auto-fit, minmax(300px, 1fr))",
+          gap: isMobile ? "16px" : "24px",
           width: "100%",
           maxWidth: "1100px",
         }}>
@@ -109,7 +129,7 @@ export default function SilkWavePage() {
             <div key={item.name} style={{
               border: "1px solid #2A2A2A",
               borderRadius: "12px",
-              padding: "36px",
+              padding: isMobile ? "24px" : "36px",
               display: "flex",
               flexDirection: "column",
               gap: "12px",
@@ -148,7 +168,7 @@ export default function SilkWavePage() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "120px 60px",
+        padding: sectionPadding,
         boxSizing: "border-box",
         position: "relative",
         zIndex: 1,
@@ -169,7 +189,7 @@ export default function SilkWavePage() {
           fontWeight: 300,
           fontStyle: "italic",
           fontFamily: "'Imbue', serif",
-          margin: "0 0 80px 0",
+          margin: isMobile ? "0 0 48px 0" : "0 0 80px 0",
           textAlign: "center",
         }}>
           Four moods, one component.
@@ -177,8 +197,10 @@ export default function SilkWavePage() {
 
         <div style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-          gap: "16px",
+          gridTemplateColumns: isMobile
+            ? "repeat(2, 1fr)"
+            : "repeat(auto-fit, minmax(240px, 1fr))",
+          gap: isMobile ? "12px" : "16px",
           width: "100%",
           maxWidth: "1100px",
         }}>
@@ -190,8 +212,8 @@ export default function SilkWavePage() {
           ].map((item) => (
             <div key={item.theme} style={{
               position: "relative",
-              height: "320px",
-              borderRadius: "16px",
+              height: isMobile ? "200px" : "320px",
+              borderRadius: isMobile ? "12px" : "16px",
               overflow: "hidden",
             }}>
               <SilkWave
@@ -213,7 +235,7 @@ export default function SilkWavePage() {
                   fontFamily: "'Imbue', serif",
                   fontStyle: "italic",
                   fontWeight: 300,
-                  fontSize: "2rem",
+                  fontSize: isMobile ? "1.5rem" : "2rem",
                   color: item.textColor,
                   margin: 0,
                 }}>
@@ -244,7 +266,7 @@ export default function SilkWavePage() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "120px 60px",
+        padding: sectionPadding,
         boxSizing: "border-box",
         position: "relative",
         zIndex: 1,
@@ -265,7 +287,7 @@ export default function SilkWavePage() {
           fontWeight: 300,
           fontStyle: "italic",
           fontFamily: "'Imbue', serif",
-          margin: "0 0 48px 0",
+          margin: isMobile ? "0 0 36px 0" : "0 0 48px 0",
           textAlign: "center",
         }}>
           Framer Marketplace
@@ -277,11 +299,11 @@ export default function SilkWavePage() {
           rel="noopener noreferrer"
           style={{
             display: "inline-block",
-            padding: "16px 48px",
+            padding: isMobile ? "14px 32px" : "16px 48px",
             border: "1px solid #F0EDE8",
             color: "#F0EDE8",
             fontFamily: "'Pretendard Variable', Pretendard, 'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif",
-            fontSize: "0.85rem",
+            fontSize: isMobile ? "0.75rem" : "0.85rem",
             letterSpacing: "0.3em",
             textTransform: "uppercase",
             textDecoration: "none",
@@ -303,7 +325,7 @@ export default function SilkWavePage() {
           color: "#3A3A3A",
           fontSize: "0.75rem",
           letterSpacing: "0.2em",
-          marginTop: "80px",
+          marginTop: isMobile ? "48px" : "80px",
           fontFamily: "'Pretendard Variable', Pretendard, 'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif",
         }}>
           © Phenomenyon stu. 2026
