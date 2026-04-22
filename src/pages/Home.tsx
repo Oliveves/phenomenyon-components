@@ -183,18 +183,15 @@ export default function Home() {
           flexShrink: 0,
           borderRight: isMobile ? "none" : `1px solid ${COLORS.border}`,
           borderBottom: isMobile ? `1px solid ${COLORS.border}` : "none",
-          padding: isMobile ? "18px 20px" : "0 40px",
+          padding: isMobile ? "20px 20px 18px" : "0 40px",
           display: "flex",
           flexDirection: isMobile ? "row" : "column",
-          justifyContent: isMobile ? "flex-start" : "center",
+          flexWrap: isMobile ? "wrap" : "nowrap",
+          justifyContent: "center",
           alignItems: isMobile ? "center" : "stretch",
-          gap: isMobile ? 20 : 16,
-          overflowX: isMobile ? "auto" : "hidden",
-          overflowY: "hidden",
-          scrollbarWidth: "none",
-          msOverflowStyle: "none",
+          gap: isMobile ? "10px 20px" : 16,
+          overflow: "hidden",
         }}
-        className={isMobile ? "no-scrollbar" : undefined}
         >
           {CATEGORY_KEYS.map((k) => {
             const isActive = !isSearching && activeCategory === k
@@ -209,18 +206,21 @@ export default function Home() {
                 style={{
                   background: "transparent",
                   border: "none",
-                  padding: 0,
+                  padding: isMobile ? "4px 2px" : 0,
                   cursor: "pointer",
-                  textAlign: "left",
+                  textAlign: isMobile ? "center" : "left",
                   fontFamily: FONT_SERIF,
                   fontStyle: "italic",
                   fontWeight: 300,
                   fontSize: isMobile
-                    ? "1.6rem"
+                    ? "1.25rem"
                     : "clamp(2.5rem, 4vw, 5rem)",
                   lineHeight: 1.1,
                   color: isActive ? COLORS.text : COLORS.catInactive,
-                  transition: "color 0.25s",
+                  borderBottom: isMobile
+                    ? `1px solid ${isActive ? COLORS.text : "transparent"}`
+                    : "none",
+                  transition: "color 0.25s, border-color 0.25s",
                   whiteSpace: "nowrap",
                   flexShrink: 0,
                 }}
@@ -239,10 +239,10 @@ export default function Home() {
             minHeight: 0,
             height: isMobile ? "auto" : "100%",
             width: isMobile ? "100%" : "auto",
-            overflowX: "auto",
-            overflowY: "hidden",
+            overflowX: isMobile ? "hidden" : "auto",
+            overflowY: isMobile ? "auto" : "hidden",
             display: "flex",
-            alignItems: "center",
+            alignItems: isMobile ? "stretch" : "center",
           }}
         >
           {displayItems.length === 0 ? (
@@ -261,18 +261,24 @@ export default function Home() {
                 }}
                 style={{
                   display: "flex",
-                  gap: isMobile ? 16 : 24,
-                  padding: isMobile ? "0 20px" : "0 40px",
-                  alignItems: "center",
+                  flexDirection: isMobile ? "column" : "row",
+                  gap: isMobile ? 28 : 24,
+                  padding: isMobile ? "24px 20px" : "0 40px",
+                  alignItems: isMobile ? "stretch" : "center",
+                  width: isMobile ? "100%" : "auto",
+                  boxSizing: "border-box",
                 }}
               >
                 {displayItems.map((it) => (
                   <motion.div
                     key={it.id}
                     variants={{
-                      hidden: { x: 60, opacity: 0 },
+                      hidden: isMobile
+                        ? { y: 40, opacity: 0 }
+                        : { x: 60, opacity: 0 },
                       visible: {
                         x: 0,
+                        y: 0,
                         opacity: 1,
                         transition: { duration: 0.4, ease: "easeOut" },
                       },
@@ -513,7 +519,9 @@ function Card({ item, isMobile }: { item: Item; isMobile: boolean }) {
   return (
     <article
       style={{
-        width: isMobile ? "min(86vw, 420px)" : 540,
+        width: isMobile ? "100%" : 540,
+        maxWidth: isMobile ? 480 : undefined,
+        marginInline: isMobile ? "auto" : undefined,
         flexShrink: 0,
         display: "flex",
         flexDirection: "column",
