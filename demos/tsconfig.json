@@ -8,12 +8,9 @@
     "strict": true,
     "skipLibCheck": true,
     "noEmit": true,
+    "types": ["vite/client"],
     "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true
+    "verbatimModuleSyntax": true
   },
-  "include": ["src"]
+  "include": ["src", "../src/components/SilkWave"]
 }
