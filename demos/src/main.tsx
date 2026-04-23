@@ -24,7 +24,7 @@ function App() {
         width: "100vw",
         boxSizing: "border-box",
         background: "#0a0a0a",
-        fontFamily: "system-ui, -apple-system, sans-serif",
+        fontFamily: "'Imbue', serif",
       }}
     >
       {THEMES.map((theme) => (
@@ -45,10 +45,9 @@ function App() {
               alignItems: "center",
               justifyContent: "center",
               color: LABEL_COLOR[theme],
-              fontStyle: "italic",
-              fontWeight: 300,
+              fontWeight: 400,
               fontSize: "clamp(1.5rem, 3vw, 2.5rem)",
-              letterSpacing: "0.05em",
+              letterSpacing: "0.01em",
               pointerEvents: "none",
             }}
           >
