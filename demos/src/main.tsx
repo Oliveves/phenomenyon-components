@@ -2,13 +2,13 @@ import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 import SilkWave, { type ThemeKey } from "../../src/components/SilkWave"
 
-const THEMES: ThemeKey[] = ["gold", "silver", "rose", "navy"]
+const THEMES: ThemeKey[] = ["champagne", "platinum", "blush", "midnight"]
 
 const LABEL_COLOR: Record<ThemeKey, string> = {
-  gold: "#2A1F0E",
-  silver: "#1A2330",
-  rose: "#2A1010",
-  navy: "#F0F4FF",
+  champagne: "#2A1F0E",
+  platinum: "#1A2330",
+  blush: "#2A1010",
+  midnight: "#F0F4FF",
 }
 
 function App() {
