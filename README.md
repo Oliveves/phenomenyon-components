@@ -30,4 +30,4 @@ npm package coming soon.
 
 ## License
 
-See [LICENSE.md](./LICENSE.md) for details.
+MIT — see [LICENSE](./LICENSE).

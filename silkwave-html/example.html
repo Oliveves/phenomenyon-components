@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SilkWave — vanilla HTML demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@300;400;500&family=Imbue:opsz,wght@10..100,100..900&family=Inconsolata:wght@300;400;500&display=swap"
+        rel="stylesheet"
+    />
+    <style>
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: "Barlow Semi Condensed", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: #1b1b1b;
+            background: #0a0a0a;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        section {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .hero[data-scheme="light"] { color: #1b1b1b; }
+        .hero[data-scheme="dark"]  { color: #f3f2ef; }
+
+        .hero-inner {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 24px;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: "Imbue", "Didot", "Times New Roman", serif;
+            font-weight: 300;
+            font-size: clamp(48px, 8.5vw, 118px);
+            line-height: 0.95;
+            letter-spacing: -0.01em;
+            margin: 0 0 18px;
+        }
+
+        .tag {
+            font-family: "Barlow Semi Condensed", -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 17px;
+            font-weight: 300;
+            letter-spacing: 0.03em;
+            color: #1b1b1b;
+            margin: 0;
+        }
+        .hero[data-scheme="dark"] .tag { color: #EEEEEE; }
+
+        .label {
+            position: absolute;
+            top: 28px;
+            left: 32px;
+            z-index: 3;
+            font-family: "Inconsolata", ui-monospace, SFMono-Regular, monospace;
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 0;
+            color: #1b1b1b;
+        }
+        .hero[data-scheme="dark"] .label { color: #fefefe; }
+
+        .controls {
+            position: relative;
+            z-index: 3;
+            display: inline-flex;
+            gap: 4px;
+            padding: 5px;
+            margin-top: 32px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 999px;
+        }
+        .hero[data-scheme="dark"] .controls {
+            background: rgba(20, 25, 40, 0.55);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+        .controls button {
+            appearance: none;
+            border: 0;
+            background: transparent;
+            color: #1b1b1b;
+            font-family: "Barlow Semi Condensed", -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0;
+            padding: 9px 18px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: background-color 160ms ease;
+        }
+        .hero[data-scheme="dark"] .controls button { color: #EEEEEE; }
+        .controls button:hover { background: rgba(0, 0, 0, 0.05); }
+        .hero[data-scheme="dark"] .controls button:hover { background: rgba(255, 255, 255, 0.08); }
+        .controls button.active { background: rgba(0, 0, 0, 0.08); }
+        .hero[data-scheme="dark"] .controls button.active { background: rgba(255, 255, 255, 0.16); }
+
+        .code-snippet {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 10px 14px;
+            background: rgba(0, 0, 0, 0.06);
+            border-radius: 6px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 12px;
+            white-space: pre;
+            text-align: left;
+            color: inherit;
+            opacity: 0.8;
+        }
+        .hero[data-scheme="dark"] .code-snippet {
+            background: rgba(255, 255, 255, 0.08);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Section 1 — Champagne -->
+    <section id="sec-1" class="hero" data-scheme="light">
+        <span class="label">01 · Champagne</span>
+        <div data-silkwave="champagne" style="position:absolute; inset:0;"></div>
+        <div class="hero-inner">
+            <h1>Silk that breathes.</h1>
+            <p class="tag">Warm gold · editorial</p>
+        </div>
+    </section>
+
+    <!-- Section 2 — Platinum -->
+    <section id="sec-2" class="hero" data-scheme="light">
+        <span class="label">02 · Platinum</span>
+        <div data-silkwave="platinum" style="position:absolute; inset:0;"></div>
+        <div class="hero-inner">
+            <h1>Quiet surface.</h1>
+            <p class="tag">Cool silver · minimal</p>
+        </div>
+    </section>
+
+    <!-- Section 3 — Blush -->
+    <section id="sec-3" class="hero" data-scheme="light">
+        <span class="label">03 · Blush</span>
+        <div data-silkwave="blush" style="position:absolute; inset:0;"></div>
+        <div class="hero-inner">
+            <h1>Warmth in stillness.</h1>
+            <p class="tag">Soft pink · romantic</p>
+        </div>
+    </section>
+
+    <!-- Section 4 — Midnight -->
+    <section id="sec-4" class="hero" data-scheme="dark">
+        <span class="label">04 · Midnight</span>
+        <div data-silkwave="midnight" style="position:absolute; inset:0;"></div>
+        <div class="hero-inner">
+            <h1>After hours.</h1>
+            <p class="tag">Deep blue · dramatic</p>
+        </div>
+    </section>
+
+    <!-- Section 5 — JS API -->
+    <section id="sec-5" class="hero" data-scheme="light">
+        <span class="label">05 · JS API · setTheme()</span>
+        <div id="js-canvas-host" style="position:absolute; inset:0;"></div>
+        <div class="hero-inner">
+            <h1 id="js-title">Choose your fabric.</h1>
+
+            <div class="controls" role="tablist" aria-label="Theme">
+                <button type="button" data-set-theme="champagne" class="active">Champagne</button>
+                <button type="button" data-set-theme="platinum">Platinum</button>
+                <button type="button" data-set-theme="blush">Blush</button>
+                <button type="button" data-set-theme="midnight">Midnight</button>
+            </div>
+        </div>
+    </section>
+
+    <script src="./silkwave.js"></script>
+    <script>
+        var jsHero = document.getElementById('sec-5');
+        var jsHost = document.getElementById('js-canvas-host');
+        var sw = new SilkWave(jsHost, {
+            theme: 'champagne',
+            speed: 0.008,
+            noiseOpacity: 0.02,
+            fill: true,
+        });
+
+        var buttons = document.querySelectorAll('[data-set-theme]');
+        buttons.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var theme = btn.getAttribute('data-set-theme');
+                sw.setTheme(theme);
+                jsHero.setAttribute('data-scheme', theme === 'midnight' ? 'dark' : 'light');
+                buttons.forEach(function (b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

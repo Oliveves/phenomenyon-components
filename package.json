@@ -7,7 +7,9 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "build:silkwave-html": "npx -y terser silkwave-html/silkwave.js -c -m --comments \"/^!/\" -o silkwave-html/silkwave.min.js",
+    "build:release": "node scripts/build-release.js"
   },
   "peerDependencies": {
     "react": "^19.0.0"
@@ -15,10 +17,12 @@
   "devDependencies": {
     "@eslint/js": "^9.39.4",
     "@types/react": "^19.2.14",
+    "archiver": "^7.0.1",
     "eslint": "^9.39.4",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.5.0",
+    "puppeteer-core": "^24.42.0",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.58.2"
   }
