@@ -35,6 +35,10 @@ const STYLES = `
 .phenomenyon-orbit-btn:hover { filter: brightness(1.08); }
 .phenomenyon-orbit-btn:active { transform: translateY(1px); }
 .phenomenyon-orbit-btn:disabled { cursor: not-allowed; opacity: 0.5; }
+.phenomenyon-orbit-btn:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+}
 .phenomenyon-orbit-btn::before {
     content: "";
     position: absolute;
