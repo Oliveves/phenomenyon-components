@@ -25,10 +25,10 @@ const STYLES = `
     appearance: none;
     text-align: center;
     line-height: 1;
-    font-family: inherit;
+    font-family: 'Barlow Semi Condensed', 'Inconsolata', sans-serif;
     font-weight: 600;
     color: var(--phenomenyon-orbit-text, currentColor);
-    background-color: var(--phenomenyon-orbit-bg, transparent);
+    background-color: var(--phenomenyon-orbit-bg, #1A1A1A);
     transition: filter 0.2s, transform 0.2s;
     isolation: isolate;
 }
@@ -156,7 +156,7 @@ export default function OrbitButton({
     hologramColors = DEFAULT_HOLOGRAM_COLORS,
     streakWidth,
     streakPeak = 110,
-    background = "transparent",
+    background = "#1A1A1A",
     textColor,
     paused = false,
     reverse = false,

@@ -5,6 +5,9 @@ import OrbitButton, {
   type OrbitButtonProps,
 } from "../../src/components/OrbitButton"
 
+const DISPLAY_FONT = "'Barlow Semi Condensed', sans-serif"
+const META_FONT = "'Inconsolata', monospace"
+
 const THEMES: ThemeKey[] = ["champagne", "platinum", "blush", "midnight"]
 
 const LABEL_COLOR: Record<ThemeKey, string> = {
@@ -27,7 +30,7 @@ function SilkWaveGrid() {
         width: "100vw",
         boxSizing: "border-box",
         background: "#0a0a0a",
-        fontFamily: "'Imbue', serif",
+        fontFamily: DISPLAY_FONT,
       }}
     >
       {THEMES.map((theme) => (
@@ -48,7 +51,7 @@ function SilkWaveGrid() {
               alignItems: "center",
               justifyContent: "center",
               color: LABEL_COLOR[theme],
-              fontWeight: 400,
+              fontWeight: 500,
               fontSize: "clamp(1.5rem, 3vw, 2.5rem)",
               letterSpacing: "0.01em",
               pointerEvents: "none",
@@ -66,10 +69,11 @@ function Caption({ children }: { children: ReactNode }) {
   return (
     <div
       style={{
+        fontFamily: META_FONT,
         fontSize: 11,
         letterSpacing: "0.18em",
         textTransform: "uppercase",
-        opacity: 0.5,
+        opacity: 0.55,
       }}
     >
       {children}
@@ -108,33 +112,47 @@ type Variation = {
 
 const VARIATIONS: Variation[] = [
   {
-    key: "solid-fast",
-    label: "Solid · 2s",
-    text: "Faster orbit",
-    props: { variant: "solid", duration: 2 },
-  },
-  {
-    key: "solid-reverse",
-    label: "Solid · reverse",
-    text: "Reverse",
-    props: { variant: "solid", reverse: true },
-  },
-  {
-    key: "holo-sunset",
-    label: "Hologram · sunset",
-    text: "Sunset",
+    key: "solid-champagne",
+    label: "Solid · champagne",
+    text: "Champagne",
     props: {
-      variant: "holographic",
-      hologramColors: ["#FFD1A8", "#FF9EC0", "#C8A8FF"],
+      variant: "solid",
+      background: "#2A1F0E",
+      accentColor: "#F5D58A",
+      textColor: "#F5E5C2",
     },
   },
   {
-    key: "holo-aurora",
-    label: "Hologram · aurora",
-    text: "Aurora",
+    key: "solid-midnight",
+    label: "Solid · midnight",
+    text: "Midnight",
+    props: {
+      variant: "solid",
+      background: "#0E1530",
+      accentColor: "#A8C7FF",
+      textColor: "#E5EEFF",
+    },
+  },
+  {
+    key: "holo-plum",
+    label: "Holo · plum",
+    text: "Plum",
     props: {
       variant: "holographic",
+      background: "#1A0E20",
+      hologramColors: ["#FFD1A8", "#FF9EC0", "#C8A8FF"],
+      textColor: "#F0E5FF",
+    },
+  },
+  {
+    key: "holo-forest",
+    label: "Holo · forest",
+    text: "Forest",
+    props: {
+      variant: "holographic",
+      background: "#0E1A14",
       hologramColors: ["#A8FFE6", "#A8C7FF", "#D6A8FF"],
+      textColor: "#E5FFF4",
       duration: 6,
     },
   },
@@ -147,8 +165,7 @@ function OrbitButtonShowcase() {
         background: "#0a0a0a",
         color: "#fff",
         minHeight: "100vh",
-        fontFamily:
-          "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+        fontFamily: DISPLAY_FONT,
         padding: "14vh 24px 12vh",
         display: "flex",
         flexDirection: "column",
@@ -161,9 +178,11 @@ function OrbitButtonShowcase() {
         <div
           style={{
             marginTop: 12,
-            fontFamily: "'Imbue', serif",
-            fontSize: "clamp(2rem, 5vw, 3.5rem)",
-            letterSpacing: "0.01em",
+            fontFamily: DISPLAY_FONT,
+            fontWeight: 500,
+            fontSize: "clamp(2.2rem, 5.5vw, 4rem)",
+            letterSpacing: "-0.01em",
+            lineHeight: 0.95,
           }}
         >
           OrbitButton
