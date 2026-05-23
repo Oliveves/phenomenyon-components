@@ -92,7 +92,6 @@ function OrbitButtonShowcase() {
         overflow: "hidden",
       }}
     >
-      <SilkWave fill theme="midnight" speed={0.004} noiseOpacity={0.02} />
       <div
         style={{
           position: "relative",
@@ -101,8 +100,8 @@ function OrbitButtonShowcase() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          gap: 48,
-          padding: "10vh 24px",
+          gap: 64,
+          padding: "12vh 24px",
         }}
       >
         <div style={{ textAlign: "center" }}>
@@ -145,10 +144,8 @@ function OrbitButtonShowcase() {
           <OrbitButton
             duration={2}
             radius={28}
-            thickness={2}
             color="#FFD9A8"
-            trailColor="rgba(255, 217, 168, 0.12)"
-            background="rgba(255, 217, 168, 0.04)"
+            background="#1A1208"
             textColor="#FFE9CC"
             buttonStyle={{ height: 58, padding: "0 32px", fontSize: 20 }}
           >
@@ -159,8 +156,7 @@ function OrbitButtonShowcase() {
           <OrbitButton
             duration={4}
             color="#A8C7FF"
-            trailColor="rgba(168, 199, 255, 0.14)"
-            background="rgba(168, 199, 255, 0.04)"
+            background="#0A1020"
             textColor="#E5EEFF"
             reverse
           >
@@ -170,10 +166,11 @@ function OrbitButtonShowcase() {
 
           <OrbitButton
             duration={6}
-            cometWidth={200}
+            cometWidth={180}
+            haloBlur={20}
+            haloSize={36}
             color="#FFB0C8"
-            trailColor="rgba(255, 176, 200, 0.18)"
-            background="rgba(255, 176, 200, 0.05)"
+            background="#180A12"
             textColor="#FFE2EC"
           >
             <span>Slow glow</span>

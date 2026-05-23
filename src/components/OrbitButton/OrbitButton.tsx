@@ -8,7 +8,15 @@ function ensureStyle() {
     const style = document.createElement("style")
     style.id = STYLE_ID
     style.textContent = `
+@property --phenomenyon-orbit-angle {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
 @keyframes phenomenyon-orbit-spin {
+    to { --phenomenyon-orbit-angle: 360deg; }
+}
+@keyframes phenomenyon-orbit-spin-fallback {
     from { transform: translate(-50%, -50%) rotate(0deg); }
     to   { transform: translate(-50%, -50%) rotate(360deg); }
 }
@@ -21,28 +29,24 @@ export type OrbitButtonProps = {
     onClick?: () => void
     /** seconds for one full orbit */
     duration?: number
-    /** orbit ring thickness in px */
-    thickness?: number
-    /** corner radius in px */
+    /** button corner radius in px */
     radius?: number
-    /** comet (rotating highlight) color */
+    /** how far the glow halo extends outside the button (px) */
+    haloSize?: number
+    /** blur amount of the orbiting glow (px) */
+    haloBlur?: number
+    /** comet color */
     color?: string
-    /** static ring tint behind the comet */
-    trailColor?: string
-    /** button background */
+    /** comet sweep width in degrees, 0..360 */
+    cometWidth?: number
+    /** button background (should be opaque to mask the halo behind the button face) */
     background?: string
     /** button text color */
     textColor?: string
-    /** backdrop-filter blur in px (0 disables) */
-    blur?: number
-    /** width of the comet sweep, 0..360 */
-    cometWidth?: number
     /** pause the orbit */
     paused?: boolean
-    /** counter-clockwise */
+    /** orbit counter-clockwise */
     reverse?: boolean
-    /** show a hairline border between ring and button face */
-    inset?: boolean
     className?: string
     style?: CSSProperties
     buttonStyle?: CSSProperties
@@ -52,17 +56,15 @@ export default function OrbitButton({
     children,
     onClick,
     duration = 3,
-    thickness = 1.5,
     radius = 18,
+    haloSize = 28,
+    haloBlur = 14,
     color = "#FFFFFF",
-    trailColor = "rgba(255, 255, 255, 0.10)",
-    background = "rgba(255, 255, 255, 0.04)",
+    cometWidth = 90,
+    background = "#141414",
     textColor = "#FFFFFF",
-    blur = 12,
-    cometWidth = 110,
     paused = false,
     reverse = false,
-    inset = true,
     className,
     style,
     buttonStyle,
@@ -71,8 +73,8 @@ export default function OrbitButton({
         ensureStyle()
     }, [])
 
-    const sweepStart = Math.max(0, 360 - cometWidth)
-    const cometGradient = `conic-gradient(from 0deg, transparent 0deg, transparent ${sweepStart}deg, ${color} 358deg, transparent 360deg)`
+    const tail = Math.max(0, 360 - cometWidth)
+    const cometGradient = `conic-gradient(from var(--phenomenyon-orbit-angle), transparent 0deg, transparent ${tail}deg, ${color} 358deg, transparent 360deg)`
 
     return (
         <span
@@ -80,12 +82,8 @@ export default function OrbitButton({
             style={{
                 position: "relative",
                 display: "inline-block",
-                borderRadius: radius,
-                overflow: "hidden",
-                isolation: "isolate",
-                padding: thickness,
-                background: trailColor,
                 lineHeight: 0,
+                isolation: "isolate",
                 ...style,
             }}
         >
@@ -93,19 +91,19 @@ export default function OrbitButton({
                 aria-hidden
                 style={{
                     position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    width: "200%",
-                    aspectRatio: "1 / 1",
+                    top: `-${haloSize}px`,
+                    left: `-${haloSize}px`,
+                    right: `-${haloSize}px`,
+                    bottom: `-${haloSize}px`,
+                    borderRadius: radius + haloSize,
                     background: cometGradient,
-                    transform: "translate(-50%, -50%)",
+                    filter: `blur(${haloBlur}px)`,
                     animation: `phenomenyon-orbit-spin ${duration}s linear infinite${
                         reverse ? " reverse" : ""
                     }`,
                     animationPlayState: paused ? "paused" : "running",
                     pointerEvents: "none",
                     zIndex: 0,
-                    willChange: "transform",
                 }}
             />
             <button
@@ -114,7 +112,7 @@ export default function OrbitButton({
                 style={{
                     position: "relative",
                     zIndex: 1,
-                    border: inset ? "1px solid rgba(255,255,255,0.06)" : "none",
+                    border: "none",
                     outline: "none",
                     cursor: "pointer",
                     display: "inline-flex",
@@ -123,7 +121,7 @@ export default function OrbitButton({
                     gap: 8,
                     padding: "0 28px",
                     height: 52,
-                    borderRadius: Math.max(0, radius - thickness),
+                    borderRadius: radius,
                     background,
                     color: textColor,
                     fontFamily: "inherit",
@@ -132,8 +130,6 @@ export default function OrbitButton({
                     letterSpacing: "0.01em",
                     lineHeight: 1,
                     whiteSpace: "nowrap",
-                    backdropFilter: blur > 0 ? `blur(${blur}px)` : undefined,
-                    WebkitBackdropFilter: blur > 0 ? `blur(${blur}px)` : undefined,
                     ...buttonStyle,
                 }}
             >
