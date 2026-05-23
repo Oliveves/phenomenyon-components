@@ -23,6 +23,7 @@ const STYLES = `
     border: 0;
     outline: 0;
     appearance: none;
+    -webkit-appearance: none;
     text-align: center;
     line-height: 1;
     font-family: 'Barlow Semi Condensed', 'Inconsolata', sans-serif;
@@ -39,13 +40,11 @@ const STYLES = `
     outline: 2px solid currentColor;
     outline-offset: 3px;
 }
-.phenomenyon-orbit-btn::before {
-    content: "";
+.phenomenyon-orbit-ring {
     position: absolute;
     inset: calc(-1 * var(--phenomenyon-orbit-thickness, 1.5px));
     border-radius: inherit;
     padding: var(--phenomenyon-orbit-thickness, 1.5px);
-    background: var(--phenomenyon-orbit-gradient);
     -webkit-mask:
         linear-gradient(#000 0 0) content-box,
         linear-gradient(#000 0 0);
@@ -57,13 +56,20 @@ const STYLES = `
     pointer-events: none;
     animation: phenomenyon-orbit-spin var(--phenomenyon-orbit-duration, 4s) linear infinite;
 }
-.phenomenyon-orbit-btn[data-paused="true"]::before { animation-play-state: paused; }
-.phenomenyon-orbit-btn[data-reverse="true"]::before { animation-direction: reverse; }
+.phenomenyon-orbit-btn[data-paused="true"] .phenomenyon-orbit-ring { animation-play-state: paused; }
+.phenomenyon-orbit-btn[data-reverse="true"] .phenomenyon-orbit-ring { animation-direction: reverse; }
+.phenomenyon-orbit-label {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
 @keyframes phenomenyon-orbit-spin {
     to { --phenomenyon-orbit-angle: 360deg; }
 }
 @media (prefers-reduced-motion: reduce) {
-    .phenomenyon-orbit-btn::before { animation: none; }
+    .phenomenyon-orbit-ring { animation: none; }
 }
 `
 
@@ -189,7 +195,6 @@ export default function OrbitButton({
     const px = (v: number | string) => (typeof v === "number" ? `${v}px` : v)
 
     const cssVars: CSSProperties & Record<string, string | number> = {
-        ["--phenomenyon-orbit-gradient"]: gradient,
         ["--phenomenyon-orbit-bg"]: background,
         ["--phenomenyon-orbit-thickness"]: `${thickness}px`,
         ["--phenomenyon-orbit-duration"]: `${duration}s`,
@@ -216,7 +221,12 @@ export default function OrbitButton({
             data-reverse={reverse ? "true" : undefined}
             style={cssVars}
         >
-            {children}
+            <span
+                aria-hidden
+                className="phenomenyon-orbit-ring"
+                style={{ background: gradient }}
+            />
+            <span className="phenomenyon-orbit-label">{children}</span>
         </button>
     )
 }
