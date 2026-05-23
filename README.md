@@ -7,6 +7,7 @@ Premium, craft-focused UI components for editorial and luxury brands.
 | Component | Description | Status |
 |---|---|---|
 | SilkWave | Silk-textured animated background with grain | ✅ |
+| OrbitButton | Button with a comet of light orbiting its border | ✅ |
 | TextReveal | Sequential character reveal animation | 🔜 |
 | MagneticButton | Cursor-reactive magnetic button | 🔜 |
 | CursorFollower | Custom cursor follower | 🔜 |
