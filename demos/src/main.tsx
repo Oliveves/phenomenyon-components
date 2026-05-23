@@ -1,7 +1,7 @@
 import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 import SilkWave, { type ThemeKey } from "../../src/components/SilkWave"
-import OrbitButton from "../../src/components/OrbitButton"
+import OrbitButton, { type OrbitButtonProps } from "../../src/components/OrbitButton"
 
 const THEMES: ThemeKey[] = ["champagne", "platinum", "blush", "midnight"]
 
@@ -11,24 +11,6 @@ const LABEL_COLOR: Record<ThemeKey, string> = {
   blush: "#2A1010",
   midnight: "#F0F4FF",
 }
-
-const ArrowDown = () => (
-  <svg
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    style={{ flexShrink: 0 }}
-    aria-hidden
-  >
-    <path
-      d="M12 5L12 19M12 19L5 12M12 19L19 12"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-    />
-  </svg>
-)
 
 function SilkWaveGrid() {
   return (
@@ -78,6 +60,56 @@ function SilkWaveGrid() {
   )
 }
 
+type OrbitVariant = {
+  key: string
+  label: string
+  props?: Partial<OrbitButtonProps>
+}
+
+const ORBIT_VARIANTS: OrbitVariant[] = [
+  {
+    key: "default",
+    label: "AI 영상 제작 소개서",
+  },
+  {
+    key: "fast",
+    label: "Faster orbit",
+    props: { duration: 2 },
+  },
+  {
+    key: "reverse",
+    label: "Reverse",
+    props: { reverse: true },
+  },
+  {
+    key: "wide",
+    label: "Wide streak",
+    props: { streakWidth: 90, duration: 6 },
+  },
+  {
+    key: "platinum",
+    label: "Platinum",
+    props: {
+      background: "#1a1a1a",
+      accentColor: "#E8E8E8",
+      textColor: "#F5F5F5",
+      radius: 28,
+      height: 58,
+      fontSize: 20,
+    },
+  },
+  {
+    key: "blush",
+    label: "Blush",
+    props: {
+      background: "#2A0F12",
+      accentColor: "#FFB0C8",
+      textColor: "#FFE2EC",
+      thickness: 3,
+    },
+  },
+]
+
 function OrbitButtonShowcase() {
   return (
     <div
@@ -85,7 +117,7 @@ function OrbitButtonShowcase() {
         position: "relative",
         width: "100vw",
         minHeight: "100vh",
-        background: "#0a0a0a",
+        background: "#000",
         fontFamily:
           "'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
         color: "#fff",
@@ -99,9 +131,8 @@ function OrbitButtonShowcase() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
           gap: 64,
-          padding: "12vh 24px",
+          padding: "14vh 24px 12vh",
         }}
       >
         <div style={{ textAlign: "center" }}>
@@ -131,51 +162,17 @@ function OrbitButtonShowcase() {
           style={{
             display: "flex",
             flexWrap: "wrap",
-            gap: 24,
+            gap: 28,
             justifyContent: "center",
             alignItems: "center",
+            maxWidth: 1100,
           }}
         >
-          <OrbitButton onClick={() => {}}>
-            <span>AI 영상 제작 소개서</span>
-            <ArrowDown />
-          </OrbitButton>
-
-          <OrbitButton
-            duration={2}
-            radius={28}
-            color="#FFD9A8"
-            background="#1A1208"
-            textColor="#FFE9CC"
-            buttonStyle={{ height: 58, padding: "0 32px", fontSize: 20 }}
-          >
-            <span>Champagne</span>
-            <ArrowDown />
-          </OrbitButton>
-
-          <OrbitButton
-            duration={4}
-            color="#A8C7FF"
-            background="#0A1020"
-            textColor="#E5EEFF"
-            reverse
-          >
-            <span>Reverse</span>
-            <ArrowDown />
-          </OrbitButton>
-
-          <OrbitButton
-            duration={6}
-            cometWidth={180}
-            haloBlur={20}
-            haloSize={36}
-            color="#FFB0C8"
-            background="#180A12"
-            textColor="#FFE2EC"
-          >
-            <span>Slow glow</span>
-            <ArrowDown />
-          </OrbitButton>
+          {ORBIT_VARIANTS.map(({ key, label, props }) => (
+            <OrbitButton key={key} {...props}>
+              <span>{label}</span>
+            </OrbitButton>
+          ))}
         </div>
 
         <div
