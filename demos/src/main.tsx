@@ -1,7 +1,9 @@
-import { StrictMode } from "react"
+import { StrictMode, type ReactNode } from "react"
 import { createRoot } from "react-dom/client"
 import SilkWave, { type ThemeKey } from "../../src/components/SilkWave"
-import OrbitButton, { type OrbitButtonProps } from "../../src/components/OrbitButton"
+import OrbitButton, {
+  type OrbitButtonProps,
+} from "../../src/components/OrbitButton"
 
 const THEMES: ThemeKey[] = ["champagne", "platinum", "blush", "midnight"]
 
@@ -60,52 +62,80 @@ function SilkWaveGrid() {
   )
 }
 
-type OrbitVariant = {
-  key: string
-  label: string
-  props?: Partial<OrbitButtonProps>
+function Caption({ children }: { children: ReactNode }) {
+  return (
+    <div
+      style={{
+        fontSize: 11,
+        letterSpacing: "0.18em",
+        textTransform: "uppercase",
+        opacity: 0.5,
+      }}
+    >
+      {children}
+    </div>
+  )
 }
 
-const ORBIT_VARIANTS: OrbitVariant[] = [
+function Stack({
+  label,
+  children,
+}: {
+  label: string
+  children: ReactNode
+}) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 18,
+      }}
+    >
+      {children}
+      <Caption>{label}</Caption>
+    </div>
+  )
+}
+
+type Variation = {
+  key: string
+  label: string
+  text: string
+  props: Partial<OrbitButtonProps>
+}
+
+const VARIATIONS: Variation[] = [
   {
-    key: "default",
-    label: "AI 영상 제작 소개서",
+    key: "solid-fast",
+    label: "Solid · 2s",
+    text: "Faster orbit",
+    props: { variant: "solid", duration: 2 },
   },
   {
-    key: "fast",
-    label: "Faster orbit",
-    props: { duration: 2 },
+    key: "solid-reverse",
+    label: "Solid · reverse",
+    text: "Reverse",
+    props: { variant: "solid", reverse: true },
   },
   {
-    key: "reverse",
-    label: "Reverse",
-    props: { reverse: true },
-  },
-  {
-    key: "wide",
-    label: "Wide streak",
-    props: { streakWidth: 90, duration: 6 },
-  },
-  {
-    key: "platinum",
-    label: "Platinum",
+    key: "holo-sunset",
+    label: "Hologram · sunset",
+    text: "Sunset",
     props: {
-      background: "#1a1a1a",
-      accentColor: "#E8E8E8",
-      textColor: "#F5F5F5",
-      radius: 28,
-      height: 58,
-      fontSize: 20,
+      variant: "holographic",
+      hologramColors: ["#FFD1A8", "#FF9EC0", "#C8A8FF"],
     },
   },
   {
-    key: "blush",
-    label: "Blush",
+    key: "holo-aurora",
+    label: "Hologram · aurora",
+    text: "Aurora",
     props: {
-      background: "#2A0F12",
-      accentColor: "#FFB0C8",
-      textColor: "#FFE2EC",
-      thickness: 3,
+      variant: "holographic",
+      hologramColors: ["#A8FFE6", "#A8C7FF", "#D6A8FF"],
+      duration: 6,
     },
   },
 ]
@@ -114,78 +144,65 @@ function OrbitButtonShowcase() {
   return (
     <div
       style={{
-        position: "relative",
-        width: "100vw",
-        minHeight: "100vh",
-        background: "#000",
-        fontFamily:
-          "'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+        background: "#0a0a0a",
         color: "#fff",
-        overflow: "hidden",
+        minHeight: "100vh",
+        fontFamily:
+          "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+        padding: "14vh 24px 12vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 96,
       }}
     >
+      <header style={{ textAlign: "center" }}>
+        <Caption>phenomenyon stu.</Caption>
+        <div
+          style={{
+            marginTop: 12,
+            fontFamily: "'Imbue', serif",
+            fontSize: "clamp(2rem, 5vw, 3.5rem)",
+            letterSpacing: "0.01em",
+          }}
+        >
+          OrbitButton
+        </div>
+      </header>
+
       <div
         style={{
-          position: "relative",
-          zIndex: 1,
           display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 64,
-          padding: "14vh 24px 12vh",
+          gap: 72,
+          flexWrap: "wrap",
+          justifyContent: "center",
         }}
       >
-        <div style={{ textAlign: "center" }}>
-          <div
-            style={{
-              fontSize: 14,
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-              opacity: 0.6,
-            }}
-          >
-            phenomenyon stu.
-          </div>
-          <div
-            style={{
-              marginTop: 8,
-              fontFamily: "'Imbue', serif",
-              fontSize: "clamp(2rem, 5vw, 3.5rem)",
-              letterSpacing: "0.01em",
-            }}
-          >
-            OrbitButton
-          </div>
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 28,
-            justifyContent: "center",
-            alignItems: "center",
-            maxWidth: 1100,
-          }}
-        >
-          {ORBIT_VARIANTS.map(({ key, label, props }) => (
-            <OrbitButton key={key} {...props}>
-              <span>{label}</span>
-            </OrbitButton>
-          ))}
-        </div>
-
-        <div
-          style={{
-            fontSize: 12,
-            opacity: 0.5,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-          }}
-        >
-          append ?silkwave to URL for the SilkWave demo
-        </div>
+        <Stack label="Solid">
+          <OrbitButton variant="solid">Solid orbit</OrbitButton>
+        </Stack>
+        <Stack label="Holographic">
+          <OrbitButton variant="holographic">Holographic orbit</OrbitButton>
+        </Stack>
       </div>
+
+      <div
+        style={{
+          display: "flex",
+          gap: 40,
+          flexWrap: "wrap",
+          justifyContent: "center",
+          maxWidth: 1100,
+        }}
+      >
+        {VARIATIONS.map(({ key, label, text, props }) => (
+          <Stack key={key} label={label}>
+            <OrbitButton {...props}>{text}</OrbitButton>
+          </Stack>
+        ))}
+      </div>
+
+      <Caption>append ?silkwave to URL for the SilkWave demo</Caption>
     </div>
   )
 }
