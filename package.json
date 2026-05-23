@@ -1,12 +1,24 @@
 {
   "name": "@phenomenyon/components",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.2.0",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
   "scripts": {
+    "build": "tsup",
+    "prepare": "npm run build",
     "lint": "eslint .",
     "build:silkwave-html": "npx -y terser silkwave-html/silkwave.js -c -m --comments \"/^!/\" -o silkwave-html/silkwave.min.js",
     "build:release": "node scripts/build-release.js"
@@ -23,6 +35,7 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.5.0",
     "puppeteer-core": "^24.42.0",
+    "tsup": "^8.5.1",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.58.2"
   }
