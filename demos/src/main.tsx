@@ -248,25 +248,44 @@ function ScrollIndicatorShowcase() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          gap: 16,
+          gap: 80,
           textAlign: "center",
           padding: "0 24px",
         }}
       >
-        <Caption>phenomenyon stu.</Caption>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <Caption>phenomenyon stu.</Caption>
+          <div
+            style={{
+              fontWeight: 500,
+              fontSize: "clamp(2.2rem, 5.5vw, 4rem)",
+              letterSpacing: "-0.01em",
+              lineHeight: 0.95,
+            }}
+          >
+            ScrollIndicator
+          </div>
+        </div>
+
         <div
           style={{
-            fontWeight: 500,
-            fontSize: "clamp(2.2rem, 5.5vw, 4rem)",
-            letterSpacing: "-0.01em",
-            lineHeight: 0.95,
+            display: "flex",
+            gap: 72,
+            flexWrap: "wrap",
+            justifyContent: "center",
+            alignItems: "flex-end",
           }}
         >
-          ScrollIndicator
+          {(["mouse", "chevron", "line"] as const).map((variant) => (
+            <Stack key={variant} label={variant}>
+              <ScrollIndicator variant={variant} label="Scroll" />
+            </Stack>
+          ))}
         </div>
       </div>
 
       <ScrollIndicator
+        variant="chevron"
         label={"Scroll to\nexplore"}
         ariaLabel="Scroll to gallery"
         fadeInDelay={0.6}

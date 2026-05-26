@@ -11,6 +11,15 @@ const STYLES = `
     0%, 100% { transform: translateY(0); }
     50%      { transform: translateY(22px); }
 }
+@keyframes phenomenyon-scroll-indicator-chevron {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(6px); }
+}
+@keyframes phenomenyon-scroll-indicator-line {
+    0%        { transform: translateY(0);    opacity: 0; }
+    15%, 85%  { opacity: 1; }
+    100%      { transform: translateY(36px); opacity: 0; }
+}
 .phenomenyon-scroll-indicator {
     display: inline-flex;
     flex-direction: column;
@@ -36,8 +45,16 @@ const STYLES = `
 }
 .phenomenyon-scroll-indicator__dot {
     animation: phenomenyon-scroll-indicator-dot
-        var(--phenomenyon-scroll-dot-duration, 2s)
+        var(--phenomenyon-scroll-duration, 2s)
         cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+.phenomenyon-scroll-indicator__chevron {
+    animation: phenomenyon-scroll-indicator-chevron
+        var(--phenomenyon-scroll-duration, 2s) ease-in-out infinite;
+}
+.phenomenyon-scroll-indicator__line-fill {
+    animation: phenomenyon-scroll-indicator-line
+        var(--phenomenyon-scroll-duration, 2s) ease-in-out infinite;
 }
 .phenomenyon-scroll-indicator__label {
     font-size: 10px;
@@ -49,7 +66,9 @@ const STYLES = `
 }
 @media (prefers-reduced-motion: reduce) {
     .phenomenyon-scroll-indicator { animation: none; opacity: 1; }
-    .phenomenyon-scroll-indicator__dot { animation: none; }
+    .phenomenyon-scroll-indicator__dot,
+    .phenomenyon-scroll-indicator__chevron,
+    .phenomenyon-scroll-indicator__line-fill { animation: none; }
 }
 `
 
@@ -62,15 +81,114 @@ function ensureStyle() {
     document.head.appendChild(el)
 }
 
+export type ScrollIndicatorVariant = "mouse" | "chevron" | "line"
+
+function Glyph({ variant }: { variant: ScrollIndicatorVariant }) {
+    if (variant === "chevron") {
+        return (
+            <svg
+                width="28"
+                height="34"
+                viewBox="0 0 28 34"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+            >
+                <g
+                    className="phenomenyon-scroll-indicator__chevron"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                >
+                    <path d="M4 7 L14 16 L24 7" opacity="0.9" />
+                    <path d="M4 17 L14 26 L24 17" opacity="0.45" />
+                </g>
+            </svg>
+        )
+    }
+
+    if (variant === "line") {
+        return (
+            <svg
+                width="2"
+                height="48"
+                viewBox="0 0 2 48"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+            >
+                <line
+                    x1="1"
+                    y1="0"
+                    x2="1"
+                    y2="48"
+                    stroke="currentColor"
+                    strokeOpacity={0.2}
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                />
+                <line
+                    className="phenomenyon-scroll-indicator__line-fill"
+                    x1="1"
+                    y1="0"
+                    x2="1"
+                    y2="12"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                />
+            </svg>
+        )
+    }
+
+    return (
+        <svg
+            width="30"
+            height="50"
+            viewBox="0 0 30 50"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+        >
+            <rect
+                width="30"
+                height="50"
+                rx="15"
+                fill="currentColor"
+                fillOpacity={0.2}
+            />
+            <rect
+                x="0.5"
+                y="0.5"
+                width="29"
+                height="49"
+                rx="14.5"
+                stroke="currentColor"
+                strokeOpacity={0.2}
+            />
+            <circle
+                className="phenomenyon-scroll-indicator__dot"
+                cx="15"
+                cy="14"
+                r="4"
+                fill="currentColor"
+            />
+        </svg>
+    )
+}
+
 export type ScrollIndicatorProps = {
-    /** caption under the mouse glyph. Use \\n for multiple lines (white-space: pre-line). Omit to hide. */
+    /** glyph style: mouse housing, bouncing chevron, or a traveling line segment */
+    variant?: ScrollIndicatorVariant
+    /** caption under the glyph. Use \\n for multiple lines (white-space: pre-line). Omit to hide. */
     label?: string
     /** accessible name for the button */
     ariaLabel?: string
     onClick?: MouseEventHandler<HTMLButtonElement>
     /** base color for glyph + label (glyph uses reduced opacities of it) */
     color?: string
-    /** dot bounce duration in seconds */
+    /** glyph animation duration in seconds */
     duration?: number
     /** fade-in duration in seconds */
     fadeInDuration?: number
@@ -82,6 +200,7 @@ export type ScrollIndicatorProps = {
 }
 
 export default function ScrollIndicator({
+    variant = "mouse",
     label = "Scroll",
     ariaLabel = "Scroll to content",
     onClick,
@@ -99,7 +218,7 @@ export default function ScrollIndicator({
 
     const cssVars: CSSProperties & Record<string, string | number> = {
         ["--phenomenyon-scroll-color"]: color,
-        ["--phenomenyon-scroll-dot-duration"]: `${duration}s`,
+        ["--phenomenyon-scroll-duration"]: `${duration}s`,
         ["--phenomenyon-scroll-fade-duration"]: `${fadeInDuration}s`,
         ["--phenomenyon-scroll-fade-delay"]: `${fadeInDelay}s`,
         ...style,
@@ -118,38 +237,7 @@ export default function ScrollIndicator({
             disabled={disabled}
             style={cssVars}
         >
-            <svg
-                width="30"
-                height="50"
-                viewBox="0 0 30 50"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-            >
-                <rect
-                    width="30"
-                    height="50"
-                    rx="15"
-                    fill="currentColor"
-                    fillOpacity={0.2}
-                />
-                <rect
-                    x="0.5"
-                    y="0.5"
-                    width="29"
-                    height="49"
-                    rx="14.5"
-                    stroke="currentColor"
-                    strokeOpacity={0.2}
-                />
-                <circle
-                    className="phenomenyon-scroll-indicator__dot"
-                    cx="15"
-                    cy="14"
-                    r="4"
-                    fill="currentColor"
-                />
-            </svg>
+            <Glyph variant={variant} />
             {label ? (
                 <span className="phenomenyon-scroll-indicator__label">{label}</span>
             ) : null}
