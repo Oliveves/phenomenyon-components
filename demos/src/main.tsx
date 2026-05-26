@@ -267,7 +267,7 @@ function ScrollIndicatorShowcase() {
       </div>
 
       <ScrollIndicator
-        label={"Explore Community\nCreations"}
+        label={"Scroll to\nexplore"}
         ariaLabel="Scroll to gallery"
         fadeInDelay={0.6}
         onClick={() =>
