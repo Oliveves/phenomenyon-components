@@ -4,6 +4,7 @@ import SilkWave, { type ThemeKey } from "../../src/components/SilkWave"
 import OrbitButton, {
   type OrbitButtonProps,
 } from "../../src/components/OrbitButton"
+import ScrollIndicator from "../../src/components/ScrollIndicator"
 
 const DISPLAY_FONT = "'Barlow Semi Condensed', sans-serif"
 const META_FONT = "'Inconsolata', monospace"
@@ -221,17 +222,81 @@ function OrbitButtonShowcase() {
         ))}
       </div>
 
-      <Caption>append ?silkwave to URL for the SilkWave demo</Caption>
+      <Caption>append ?silkwave or ?scroll to URL for other demos</Caption>
     </div>
   )
 }
 
-const showSilkwave =
-  typeof window !== "undefined" &&
-  new URLSearchParams(window.location.search).has("silkwave")
+function ScrollIndicatorShowcase() {
+  return (
+    <div
+      style={{
+        position: "relative",
+        width: "100vw",
+        minHeight: "100vh",
+        background: "#000",
+        color: "#fff",
+        fontFamily: DISPLAY_FONT,
+        overflow: "hidden",
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 16,
+          textAlign: "center",
+          padding: "0 24px",
+        }}
+      >
+        <Caption>phenomenyon stu.</Caption>
+        <div
+          style={{
+            fontWeight: 500,
+            fontSize: "clamp(2.2rem, 5.5vw, 4rem)",
+            letterSpacing: "-0.01em",
+            lineHeight: 0.95,
+          }}
+        >
+          ScrollIndicator
+        </div>
+      </div>
+
+      <ScrollIndicator
+        label={"Explore Community\nCreations"}
+        ariaLabel="Scroll to gallery"
+        fadeInDelay={0.6}
+        onClick={() =>
+          window.scrollTo({ top: window.innerHeight, behavior: "smooth" })
+        }
+        style={{
+          position: "absolute",
+          left: "50%",
+          bottom: 20,
+          transform: "translateX(-50%)",
+        }}
+      />
+    </div>
+  )
+}
+
+const params =
+  typeof window !== "undefined"
+    ? new URLSearchParams(window.location.search)
+    : new URLSearchParams()
+
+function Root() {
+  if (params.has("silkwave")) return <SilkWaveGrid />
+  if (params.has("scroll")) return <ScrollIndicatorShowcase />
+  return <OrbitButtonShowcase />
+}
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    {showSilkwave ? <SilkWaveGrid /> : <OrbitButtonShowcase />}
+    <Root />
   </StrictMode>,
 )
