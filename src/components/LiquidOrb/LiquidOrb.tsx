@@ -1,12 +1,55 @@
 import { useEffect, useRef, type CSSProperties } from "react"
+import { LIQUID_ORB_PALETTES, type LiquidOrbPalette } from "./palettes"
+
+export type { LiquidOrbPalette }
+
+export type LiquidOrbShape = "orb" | "blob" | "droplet"
+
+// [frequency, amplitude, phase multiplier]
+type Harmonic = [number, number, number]
+const SHAPES: Record<
+    LiquidOrbShape,
+    { harmonics: Harmonic[]; yStretch: number; topPinch: number }
+> = {
+    orb: {
+        harmonics: [
+            [2, 0.028, 1],
+            [3, 0.02, -1.3],
+            [5, 0.012, 0.7],
+        ],
+        yStretch: 1,
+        topPinch: 0,
+    },
+    blob: {
+        harmonics: [
+            [2, 0.07, 0.8],
+            [3, 0.045, -1.1],
+            [5, 0.022, 0.6],
+        ],
+        yStretch: 1,
+        topPinch: 0,
+    },
+    droplet: {
+        harmonics: [
+            [2, 0.02, 1],
+            [3, 0.014, -1.2],
+        ],
+        yStretch: 1.22,
+        topPinch: 0.24,
+    },
+}
 
 export type LiquidOrbProps = {
     /** diameter in px when `fill` is false */
     size?: number
     /** fill the parent element instead of using `size` (parent needs a size + position) */
     fill?: boolean
-    /** gradient colors for the liquid, reads best warm -> cool */
+    /** named color preset */
+    palette?: LiquidOrbPalette
+    /** custom gradient colors (warm -> cool reads best); overrides `palette` */
     colors?: string[]
+    /** silhouette: round orb, strong blob, or elongated droplet */
+    shape?: LiquidOrbShape
     /** idle wobble speed */
     speed?: number
     /** how strongly the surface leans / bulges toward the cursor (0 disables) */
@@ -19,12 +62,12 @@ export type LiquidOrbProps = {
     style?: CSSProperties
 }
 
-const DEFAULT_COLORS = ["#FF6A3D", "#FFB27A", "#79C7C9", "#6F8FD0"]
-
 export default function LiquidOrb({
     size = 420,
     fill = false,
-    colors = DEFAULT_COLORS,
+    palette = "sunset",
+    colors,
+    shape = "orb",
     speed = 0.02,
     reactivity = 1,
     background = "#0A0A0A",
@@ -45,13 +88,14 @@ export default function LiquidOrb({
         let height = 0
         let t = 0
 
-        // pointer offset from orb center (target) and eased current value
         let targetX = 0
         let targetY = 0
         let curX = 0
         let curY = 0
 
-        const palette = colors.length >= 2 ? colors : DEFAULT_COLORS
+        const cfg = SHAPES[shape]
+        const swatches =
+            colors && colors.length >= 2 ? colors : LIQUID_ORB_PALETTES[palette]
 
         // one-time grain tile
         const noiseCanvas = document.createElement("canvas")
@@ -70,7 +114,7 @@ export default function LiquidOrb({
         const grainPattern = ctx.createPattern(noiseCanvas, "repeat")
 
         const radius = () =>
-            fill ? Math.min(width, height) * 0.3 : size * 0.4
+            fill ? Math.min(width, height) * 0.27 : size * 0.34
 
         const shortestAngle = (a: number) =>
             Math.atan2(Math.sin(a), Math.cos(a))
@@ -86,59 +130,54 @@ export default function LiquidOrb({
             ctx.fillStyle = background
             ctx.fillRect(0, 0, w, h)
 
-            // ease pointer influence
             const ease = 0.08 * (0.4 + reactivity)
             curX += (targetX - curX) * ease
             curY += (targetY - curY) * ease
 
-            // orb leans slightly toward the cursor
             const cx = cx0 + curX * 0.06 * reactivity
             const cy = cy0 + curY * 0.06 * reactivity
 
             const mouseAngle = Math.atan2(curY, curX)
-            const influence = Math.min(
-                Math.hypot(curX, curY) / (R * 1.1),
-                1,
-            ) * reactivity
+            const influence =
+                Math.min(Math.hypot(curX, curY) / (R * 1.1), 1) * reactivity
 
-            // build the wobbling blob outline
             const points = 140
+            const top = -Math.PI / 2
             const path = new Path2D()
             for (let i = 0; i <= points; i++) {
                 const a = (i / points) * Math.PI * 2
-                const wobble =
-                    Math.sin(a * 2 + t) * 0.028 +
-                    Math.sin(a * 3 - t * 1.3) * 0.02 +
-                    Math.sin(a * 5 + t * 0.7) * 0.012
-                // localized bulge toward the cursor (gaussian in angle)
+                let wob = 0
+                for (const [freq, amp, ph] of cfg.harmonics) {
+                    wob += Math.sin(a * freq + t * ph) * amp
+                }
+                const dTop = shortestAngle(a - top)
+                const pinch =
+                    1 - cfg.topPinch * Math.exp(-(dTop * dTop) / (2 * 0.6 * 0.6))
                 const d = shortestAngle(a - mouseAngle)
                 const bulge =
                     Math.exp(-(d * d) / (2 * 0.8 * 0.8)) * influence * R * 0.16
-                const r = R * (1 + wobble) + bulge
+                const r = (R * (1 + wob) + bulge) * pinch
                 const x = cx + r * Math.cos(a)
-                const y = cy + r * Math.sin(a)
+                const y = cy + r * Math.sin(a) * cfg.yStretch
                 if (i === 0) path.moveTo(x, y)
                 else path.lineTo(x, y)
             }
             path.closePath()
 
-            // focal point shifted toward the cursor + a touch upward (top light)
             const fx = cx + curX * 0.28
             const fy = cy + curY * 0.28 - R * 0.18
 
             const grad = ctx.createRadialGradient(fx, fy, 0, cx, cy, R * 1.18)
-            const last = palette.length - 1
-            palette.forEach((c, i) => grad.addColorStop(i / last, c))
+            const last = swatches.length - 1
+            swatches.forEach((c, i) => grad.addColorStop(i / last, c))
 
-            // bloom + base fill
             ctx.save()
-            ctx.shadowColor = palette[0]
+            ctx.shadowColor = swatches[0]
             ctx.shadowBlur = R * 0.3
             ctx.fillStyle = grad
             ctx.fill(path)
             ctx.restore()
 
-            // specular sheen, clipped to the orb
             ctx.save()
             ctx.clip(path)
             const sheen = ctx.createRadialGradient(
@@ -154,7 +193,6 @@ export default function LiquidOrb({
             ctx.fillStyle = sheen
             ctx.fillRect(0, 0, w, h)
 
-            // grain, also clipped to the orb
             if (grain > 0 && grainPattern) {
                 ctx.globalAlpha = grain
                 ctx.fillStyle = grainPattern
@@ -218,7 +256,7 @@ export default function LiquidOrb({
             window.removeEventListener("pointermove", onPointerMove)
             window.removeEventListener("pointerout", onPointerLeave)
         }
-    }, [size, fill, colors, speed, reactivity, background, grain])
+    }, [size, fill, palette, colors, shape, speed, reactivity, background, grain])
 
     return (
         <canvas
@@ -226,7 +264,13 @@ export default function LiquidOrb({
             className={className}
             style={
                 fill
-                    ? { position: "absolute", inset: 0, width: "100%", height: "100%", ...style }
+                    ? {
+                          position: "absolute",
+                          inset: 0,
+                          width: "100%",
+                          height: "100%",
+                          ...style,
+                      }
                     : { display: "block", ...style }
             }
         />

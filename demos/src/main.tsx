@@ -5,7 +5,10 @@ import OrbitButton, {
   type OrbitButtonProps,
 } from "../../src/components/OrbitButton"
 import ScrollIndicator from "../../src/components/ScrollIndicator"
-import LiquidOrb from "../../src/components/LiquidOrb"
+import LiquidOrb, {
+  type LiquidOrbPalette,
+  type LiquidOrbShape,
+} from "../../src/components/LiquidOrb"
 
 const DISPLAY_FONT = "'Barlow Semi Condensed', sans-serif"
 const META_FONT = "'Inconsolata', monospace"
@@ -309,47 +312,70 @@ const params =
     ? new URLSearchParams(window.location.search)
     : new URLSearchParams()
 
+const ORB_VARIANTS: {
+  palette: LiquidOrbPalette
+  shape: LiquidOrbShape
+}[] = [
+  { palette: "sunset", shape: "orb" },
+  { palette: "aurora", shape: "blob" },
+  { palette: "magma", shape: "droplet" },
+  { palette: "ocean", shape: "orb" },
+  { palette: "iris", shape: "blob" },
+  { palette: "sunset", shape: "droplet" },
+]
+
 function LiquidOrbShowcase() {
   return (
     <div
       style={{
-        position: "relative",
-        width: "100vw",
-        minHeight: "100vh",
         background: "#0a0a0a",
         color: "#fff",
+        minHeight: "100vh",
         fontFamily: DISPLAY_FONT,
-        overflow: "hidden",
+        padding: "12vh 24px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 72,
       }}
     >
-      <LiquidOrb fill background="#0a0a0a" />
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 12,
-          textAlign: "center",
-          padding: "0 24px",
-          pointerEvents: "none",
-        }}
-      >
+      <header style={{ textAlign: "center" }}>
         <Caption>phenomenyon stu.</Caption>
         <div
           style={{
+            marginTop: 12,
             fontWeight: 500,
             fontSize: "clamp(2.2rem, 5.5vw, 4rem)",
             letterSpacing: "-0.01em",
             lineHeight: 0.95,
-            mixBlendMode: "difference",
           }}
         >
           LiquidOrb
         </div>
-        <Caption>move your cursor</Caption>
+        <div style={{ marginTop: 12 }}>
+          <Caption>move your cursor</Caption>
+        </div>
+      </header>
+
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 40,
+          justifyContent: "center",
+          maxWidth: 1000,
+        }}
+      >
+        {ORB_VARIANTS.map(({ palette, shape }) => (
+          <Stack key={`${palette}-${shape}`} label={`${palette} · ${shape}`}>
+            <LiquidOrb
+              size={240}
+              palette={palette}
+              shape={shape}
+              background="#0a0a0a"
+            />
+          </Stack>
+        ))}
       </div>
     </div>
   )
