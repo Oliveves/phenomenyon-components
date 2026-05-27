@@ -14,3 +14,6 @@ export type {
     ScrollIndicatorProps,
     ScrollIndicatorVariant,
 } from "./components/ScrollIndicator"
+
+export { default as LiquidOrb } from "./components/LiquidOrb"
+export type { LiquidOrbProps } from "./components/LiquidOrb"

@@ -5,6 +5,7 @@ import OrbitButton, {
   type OrbitButtonProps,
 } from "../../src/components/OrbitButton"
 import ScrollIndicator from "../../src/components/ScrollIndicator"
+import LiquidOrb from "../../src/components/LiquidOrb"
 
 const DISPLAY_FONT = "'Barlow Semi Condensed', sans-serif"
 const META_FONT = "'Inconsolata', monospace"
@@ -308,9 +309,56 @@ const params =
     ? new URLSearchParams(window.location.search)
     : new URLSearchParams()
 
+function LiquidOrbShowcase() {
+  return (
+    <div
+      style={{
+        position: "relative",
+        width: "100vw",
+        minHeight: "100vh",
+        background: "#0a0a0a",
+        color: "#fff",
+        fontFamily: DISPLAY_FONT,
+        overflow: "hidden",
+      }}
+    >
+      <LiquidOrb fill background="#0a0a0a" />
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 12,
+          textAlign: "center",
+          padding: "0 24px",
+          pointerEvents: "none",
+        }}
+      >
+        <Caption>phenomenyon stu.</Caption>
+        <div
+          style={{
+            fontWeight: 500,
+            fontSize: "clamp(2.2rem, 5.5vw, 4rem)",
+            letterSpacing: "-0.01em",
+            lineHeight: 0.95,
+            mixBlendMode: "difference",
+          }}
+        >
+          LiquidOrb
+        </div>
+        <Caption>move your cursor</Caption>
+      </div>
+    </div>
+  )
+}
+
 function Root() {
   if (params.has("silkwave")) return <SilkWaveGrid />
   if (params.has("scroll")) return <ScrollIndicatorShowcase />
+  if (params.has("orb")) return <LiquidOrbShowcase />
   return <OrbitButtonShowcase />
 }
 

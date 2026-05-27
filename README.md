@@ -9,6 +9,7 @@ Premium, craft-focused UI components for editorial and luxury brands.
 | SilkWave | Silk-textured animated background with grain | ✅ |
 | OrbitButton | Button with a comet of light orbiting its border | ✅ |
 | ScrollIndicator | Animated scroll-down hint with a bouncing dot | ✅ |
+| LiquidOrb | Cursor-reactive liquid sphere that sloshes toward the pointer | ✅ |
 | TextReveal | Sequential character reveal animation | 🔜 |
 | MagneticButton | Cursor-reactive magnetic button | 🔜 |
 | CursorFollower | Custom cursor follower | 🔜 |
